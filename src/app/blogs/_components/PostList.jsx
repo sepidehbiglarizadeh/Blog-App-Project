@@ -12,10 +12,18 @@ async function PostList() {
     <div className="grid grid-cols-12 gap-8">
       {posts.map((post) => (
         <div
-          className="col-span-12 sm:col-span-6 lg:col-span-4 border border-secondary-100 p-2 rounded-lg"
+          className="col-span-12 sm:col-span-6 lg:col-span-4 border border-secondary-300 p-2 rounded-lg"
           key={post._id}
         >
-          <Image src={post.coverImageUrl} alt="" width={400} height={500} />
+          <div className="relative aspect-video overflow-hidden rounded-md mb-6">
+            <Image
+              src={post.coverImageUrl}
+              alt={post.title}
+              fill
+              className="object-cover object-center hover:scale-110 transition-all duration-300 ease-out"
+              quality={80}
+            />
+          </div>
         </div>
       ))}
     </div>
