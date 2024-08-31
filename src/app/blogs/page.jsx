@@ -1,11 +1,8 @@
-async function BlogPage() {
-  await new Promise((resolve) => setTimeout(() => resolve(), 3000));
+import { Suspense } from "react";
+import PostList from "./_components/PostList";
+import Spinner from "@/ui/Spinner";
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/post/list`);
-  const {
-    data: { posts },
-  } = await res.json();
-
+function BlogPage() {
   return (
     <div>
       <p className="text-secondary-500">
@@ -20,9 +17,9 @@ async function BlogPage() {
         رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات
         پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
       </p>
-      {posts.map((post) => (
-        <div key={post._id}>{post.title}</div>
-      ))}
+      <Suspense fallback={<Spinner />}>
+        <PostList />
+      </Suspense>
     </div>
   );
 }
