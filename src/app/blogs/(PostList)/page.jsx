@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import PostList from "./_components/PostList";
+import PostList from "../_components/PostList";
 import Spinner from "@/ui/Spinner";
 
 function BlogPage() {
