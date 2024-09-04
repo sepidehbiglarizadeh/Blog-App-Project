@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 async function SinglePostPage({ params }) {
   // await new Promise((resolve) => setTimeout(() => resolve(), 2000));
@@ -6,9 +7,10 @@ async function SinglePostPage({ params }) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/post/slug/${params.postSlug}`
   );
-  const {
-    data: { post },
-  } = await res.json();
+  const { data } = await res.json();
+  const { post } = data || {};
+
+  if (!post) notFound();
 
   return (
     <div className="text-secondary-600 max-w-screen-md mx-auto">
