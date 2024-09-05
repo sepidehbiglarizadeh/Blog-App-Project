@@ -1,18 +1,26 @@
-import { getPostBySlug } from "@/services/postServices";
+import { getPostBySlug, getPosts } from "@/services/postServices";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
-  const post = await getPostBySlug(params.postSlug);
+  const post = await getPostBySlug(params.slug);
   return {
     title: `پست ${post.title}`,
   };
 }
 
-async function SinglePostPage({ params }) {
-  // await new Promise((resolve) => setTimeout(() => resolve(), 2000));
+export const dynamicParams = false; // in baes mishe vaghti az generateStaticParams estafde kardim ta safe static beshe age safehi be joz pagehayi ke pre render shode darkhast shod errore 404 bede
 
-  const post = await getPostBySlug(params.postSlug);
+export async function generateStaticParams() {
+  // get posts => [ {slug:"slug-1",...} ]
+  const posts = await getPosts();
+  const slugs = posts.map((post) => ({ slug: post.slug }));
+  return slugs;
+  // agara bekhahim faghat masalan 10 poste aval be sorate stati bashan va baghiye besorate sunamiv miaym roye postamon slice mizanim bad map mizanim va dynamicParams barabar ba true gharar midim
+}
+
+async function SinglePostPage({ params }) {
+  const post = await getPostBySlug(params.slug);
 
   if (!post) notFound();
 
