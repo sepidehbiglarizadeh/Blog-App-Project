@@ -1,10 +1,10 @@
 "use client";
 
-import { signupApi, singinApi } from "@/services/authService";
+import { getUserApi, signupApi, singinApi } from "@/services/authService";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-import { createContext, useReducer, useContext } from "react";
+import { createContext, useReducer, useContext, useEffect } from "react";
 
 const AuthContext = createContext();
 
@@ -34,6 +34,11 @@ const authReducer = (state, action) => {
         isAthenticated: true,
       };
     case "signup":
+      return {
+        user: action.payload,
+        isAuthenticated: true,
+      };
+    case "user/loaded":
       return {
         user: action.payload,
         isAuthenticated: true,
@@ -77,6 +82,26 @@ export default function AuthProvider({ children }) {
       toast.error(error);
     }
   }
+
+  async function getUser() {
+    dispatch({ type: "loading" });
+    try {
+      const {
+        data: { user },
+      } = await getUserApi();
+      dispatch({ type: "user/loaded", payload: user });
+    } catch (err) {
+      const error = err?.response?.data?.message;
+      dispatch({ type: "rejected", payload: error });
+    }
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      await getUser();
+    }
+    fetchData();
+  }, []);
 
   return (
     <AuthContext.Provider

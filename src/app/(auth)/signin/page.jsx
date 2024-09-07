@@ -4,9 +4,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Link from "next/link";
 import Button from "@/ui/Button";
-import Spinner from "@/ui/Spinner";
 import RHFTextField from "@/ui/RHFTextField";
 import { useAuth } from "@/context/AuthContext";
+import SpinnerMini from "@/ui/SpinnerMini";
 
 const schema = yup
   .object({
@@ -52,8 +52,8 @@ function Singin() {
         />
         <div className="">
           {isLoading ? (
-            <div>
-              <Spinner />
+            <div className="flex items-center justify-center">
+              <SpinnerMini />
             </div>
           ) : (
             <Button

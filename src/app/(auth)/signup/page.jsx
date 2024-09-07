@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "@/context/AuthContext";
+import SpinnerMini from "@/ui/SpinnerMini";
 
 const schema = yup
   .object({
@@ -64,9 +65,15 @@ function Signup() {
           isRequired
           errors={errors}
         />
-        <Button type="submit" variant="primary" className="w-full">
-          تایید
-        </Button>
+        {isLoading ? (
+          <div className="flex items-center justify-center">
+            <SpinnerMini />
+          </div>
+        ) : (
+          <Button type="submit" variant="primary" className="w-full">
+            تایید
+          </Button>
+        )}
       </form>
     </div>
   );
