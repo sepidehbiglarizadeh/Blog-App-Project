@@ -9,6 +9,7 @@ export const revalidate = 3600; // alan in safhe statice vali age revalidate ro 
 // 2. new incoming request to rebuild this page =>
 // updated data will be shown to the next user!! => ISR => incremental static re-generation
 
+export const exprimental_ppr = true;
 
 function BlogPage() {
   return (
