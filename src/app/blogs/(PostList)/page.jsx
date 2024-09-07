@@ -2,6 +2,14 @@ import { Suspense } from "react";
 import PostList from "../_components/PostList";
 import Spinner from "@/ui/Spinner";
 
+// how to revalidate, time-base:
+export const revalidate = 3600; // alan in safhe statice vali age revalidate ro sefr bezarim dynamic mishe
+// after 15 => re-build =>
+// 1. pass time interval +
+// 2. new incoming request to rebuild this page =>
+// updated data will be shown to the next user!! => ISR => incremental static re-generation
+
+
 function BlogPage() {
   return (
     <div>
