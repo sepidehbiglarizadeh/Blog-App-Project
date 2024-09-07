@@ -5,9 +5,7 @@ import RHFTextField from "@/ui/RHFTextField";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { signupApi } from "@/services/authService";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 const schema = yup
   .object({
@@ -31,18 +29,9 @@ function Signup() {
     mode: "onTouched",
   });
 
-  const router = useRouter();
-
+  const { signup } = useAuth();
   const onSubmit = async (values) => {
-    try {
-      const { user, message } = await signupApi(values);
-      console.log(user, message);
-      toast.success(message);
-      router.push("/profile");
-    } catch (error) {
-      toast.error(error?.response?.data?.message);
-      console.log(error?.response?.data?.message);
-    }
+    await signup(values);
   };
 
   return (

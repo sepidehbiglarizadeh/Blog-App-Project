@@ -6,9 +6,7 @@ import Link from "next/link";
 import Button from "@/ui/Button";
 import Spinner from "@/ui/Spinner";
 import RHFTextField from "@/ui/RHFTextField";
-import { singinApi } from "@/services/authService";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 const schema = yup
   .object({
@@ -24,16 +22,10 @@ function Singin() {
     formState: { errors, isLoading },
   } = useForm({ resolver: yupResolver(schema), mode: "onTouched" });
 
-  const router = useRouter();
+  const { signin } = useAuth();
 
   const onSubmit = async (values) => {
-    try {
-      const { user, message } = await singinApi(values);
-      toast.success(message);
-      // router.push("/profile");
-    } catch (error) {
-      toast.error(error?.response?.data?.message)
-    }
+    await signin(values);
   };
 
   return (
