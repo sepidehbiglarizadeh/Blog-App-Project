@@ -56,14 +56,16 @@ export default function AuthProvider({ children }) {
   async function signin(values) {
     dispatch({ type: "loading" });
     try {
-      const { user, message } = await singinApi(values);
+      const {
+        data: { message, user },
+      } = await singinApi(values);
       dispatch({ type: "signin", payload: user });
       toast.success(message);
       router.push("/profile");
-    } catch (error) {
-      const errorMsg = error?.response?.data?.message;
-      dispatch({ type: "rejected", payload: errorMsg });
-      toast.error(errorMsg);
+    } catch (err) {
+      const error = err?.response?.data?.message;
+      dispatch({ type: "rejected", payload: error });
+      toast.error(error);
     }
   }
 
