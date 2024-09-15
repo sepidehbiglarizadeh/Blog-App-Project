@@ -1,9 +1,10 @@
 import { getPostBySlug, getPosts } from "@/services/postServices";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import RelatedPost from "../_components/RelatedPost";
 
 export async function generateMetadata({ params }) {
-  const post = await getPostBySlug(params.slug);
+  const post = await getPostBySlug(params.postSlug);
   return {
     title: `پست ${post.title}`,
   };
@@ -14,13 +15,13 @@ export const dynamicParams = false; // in baes mishe vaghti az generateStaticPar
 export async function generateStaticParams() {
   // get posts => [ {slug:"slug-1",...} ]
   const posts = await getPosts();
-  const slugs = posts.map((post) => ({ slug: post.slug }));
+  const slugs = posts.map((post) => ({ slug: post.postSlug }));
   return slugs;
   // agara bekhahim faghat masalan 10 poste aval be sorate stati bashan va baghiye besorate sunamiv miaym roye postamon slice mizanim bad map mizanim va dynamicParams barabar ba true gharar midim
 }
 
 async function SinglePostPage({ params }) {
-  const post = await getPostBySlug(params.slug);
+  const post = await getPostBySlug(params.postSlug);
 
   if (!post) notFound();
 
@@ -38,7 +39,7 @@ async function SinglePostPage({ params }) {
           src={post.coverImageUrl}
         />
       </div>
-      {/* {post.related.length > 0 ? <RelatedPost posts={post.related} /> : null} */}
+      {post.related.length > 0 && <RelatedPost posts={post.related} />}
       {/* <BlogComments post={post} /> */}
     </div>
   );
