@@ -2,6 +2,8 @@
 
 import { createComment } from "@/lib/actions";
 import Button from "@/ui/Button";
+import SpinnerMini from "@/ui/SpinnerMini";
+import SubmitButton from "@/ui/SubmitButton";
 import TextArea from "@/ui/TextArea";
 import { useState } from "react";
 
@@ -21,7 +23,7 @@ function CommentForm({ postId, parentId }) {
               isRequired
               onChange={(e) => setText(e.target.value)}
             />
-            <Button>تائید</Button>
+            <SubmitButton>تائید</SubmitButton>
           </form>
         </div>
       </div>
