@@ -14,7 +14,7 @@ async function CategoryList() {
       {categories.map((category) => {
         return (
           <li key={category._id}>
-            <Link href={`/blogs/categor/${category.slug}`}>
+            <Link href={`/blogs/category/${category.slug}`}>
               {category.title}
             </Link>
           </li>
