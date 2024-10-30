@@ -11,3 +11,7 @@ export async function singinApi(data) {
 export async function getUserApi(options) {
   return http.get(`/user/profile`, options).then(({ data }) => data);
 }
+
+export async function getAllUsersApi(options) {
+  return http.get(`/user/list`, options).then(({ data }) => data.data);
+}
