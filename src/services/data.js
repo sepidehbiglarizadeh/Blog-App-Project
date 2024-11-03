@@ -15,8 +15,8 @@ export async function fetchCardData() {
     ]);
 
     const numberOfUsers = Number(data[0].users.length ?? "0");
-    const numberOfPosts = Number(data[1].length ?? "0");
-    const numberOfComments = Number(data[2].comments.length ?? "0");
+    const numberOfPosts = Number(data[1].posts.length ?? "0");
+    const numberOfComments = Number(data[2].commentsCount ?? "0");
 
     return {
       numberOfPosts,
@@ -31,7 +31,7 @@ export async function fetchCardData() {
 
 export async function fetchLatestPosts() {
   try {
-    const posts = await getPosts("sort=latest&limit=5");
+    const { posts } = await getPosts("sort=latest&limit=5");
     return posts;
   } catch (error) {
     throw new Error(error?.response?.data?.message);

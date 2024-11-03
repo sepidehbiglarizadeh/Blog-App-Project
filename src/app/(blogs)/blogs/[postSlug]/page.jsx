@@ -15,7 +15,7 @@ export const dynamicParams = false; // in baes mishe vaghti az generateStaticPar
 
 export async function generateStaticParams() {
   // get posts => [ {slug:"slug-1",...} ]
-  const posts = await getPosts();
+  const { posts } = await getPosts();
   const slugs = posts.map((post) => ({ slug: post.postSlug }));
   return slugs;
   // agara bekhahim faghat masalan 10 poste aval be sorate stati bashan va baghiye besorate sunamiv miaym roye postamon slice mizanim bad map mizanim va dynamicParams barabar ba true gharar midim

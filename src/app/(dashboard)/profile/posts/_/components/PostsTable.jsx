@@ -4,8 +4,8 @@ import Table from "@/ui/Table";
 import React from "react";
 import PostRow from "./PostRow";
 
-async function PostsTable({query = ""}) {
-  const posts = await getPosts(query);
+async function PostsTable({ query = "" }) {
+  const { posts } = await getPosts(query);
 
   if (!posts.length) return <Empty resourceName="پستی یافت نشد" />;
 
