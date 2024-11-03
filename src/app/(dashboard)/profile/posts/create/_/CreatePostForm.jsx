@@ -1,5 +1,6 @@
-"use client"
+"use client";
 
+import { useCategories } from "@/hooks/useCategories";
 import RHFSelect from "@/ui/RHFSelect";
 import RHFTextField from "@/ui/RHFTextField";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,6 +10,8 @@ import * as yup from "yup";
 const schema = yup.object();
 
 export default function CreatePostForm() {
+  const { categories } = useCategories();
+
   const {
     register,
     formState: { errors },
@@ -62,7 +65,7 @@ export default function CreatePostForm() {
         register={register}
         name="category"
         isRequired
-        options={[]}
+        options={categories}
       />
     </form>
   );
