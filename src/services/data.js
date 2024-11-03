@@ -28,3 +28,12 @@ export async function fetchCardData() {
     throw new Error("خطا در بارگذاری اطلاعات");
   }
 }
+
+export async function fetchLatestPosts() {
+  try {
+    const posts = await getPosts("sort=latest&limit=5");
+    return posts;
+  } catch (error) {
+    throw new Error(error?.response?.data?.message);
+  }
+}
