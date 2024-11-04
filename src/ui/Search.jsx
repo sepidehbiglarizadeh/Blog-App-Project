@@ -14,6 +14,7 @@ export default function Search() {
     const searchValue = search.value;
     // url =>
     const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set("page", "1");
     if (searchValue) {
       newParams.set("search", searchValue);
     } else {
