@@ -6,6 +6,8 @@ import Modal from "@/ui/Modal";
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useState } from "react";
+import useDeletePost from "../useDeletePost";
+import { useRouter } from "next/navigation";
 
 export function CreatePost() {
   return (
@@ -20,8 +22,11 @@ export function CreatePost() {
   );
 }
 
-export function DeletePost({ post: { _id, title } }) {
+export function DeletePost({ post: { _id: id, title } }) {
   const [open, setOpen] = useState(false);
+  const { deletePost, isDeleting } = useDeletePost();
+  const router = useRouter();
+
   return (
     <>
       <ButtonIcon variant="outline" onClick={() => setOpen(true)}>
@@ -33,8 +38,17 @@ export function DeletePost({ post: { _id, title } }) {
           onClose={() => setOpen(false)}
           onConfirm={(e) => {
             e.preventDefault();
-            
+            deletePost(
+              { id },
+              {
+                onSuccess: () => {
+                  setOpen(false);
+                  router.refresh("/profile/posts");
+                },
+              }
+            );
           }}
+          disabled={isDeleting}
         />
       </Modal>
     </>

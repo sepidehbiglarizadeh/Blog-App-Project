@@ -35,6 +35,12 @@ export async function editPostApi({ data, id }) {
   return http.patch(`/post/update/${id}`, data).then(({ data }) => data.data);
 }
 
-export async function getPostByIdApi( id ) {
+export async function getPostByIdApi(id) {
   return http.get(`/post/${id}`).then(({ data }) => data.data);
+}
+
+export async function deletePostApi({id, options}) {
+  return http
+    .delete(`/post/remove/${id}`, options)
+    .then(({ data }) => data.data);
 }
