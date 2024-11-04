@@ -1,6 +1,7 @@
 "use client";
 
 import { useCategories } from "@/hooks/useCategories";
+import Button from "@/ui/Button";
 import ButtonIcon from "@/ui/ButtonIcon";
 import FileInput from "@/ui/FileInput";
 import RHFSelect from "@/ui/RHFSelect";
@@ -12,12 +13,40 @@ import Image from "next/image";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
+import useCreatePost from "./useCreatePost";
+import SpinnerMini from "@/ui/SpinnerMini";
+import { useRouter } from "next/navigation";
 
-const schema = yup.object();
+const schema = yup
+  .object({
+    title: yup
+      .string()
+      .min(5, "حداقل ۵ کاراکتر را وارد کنید")
+      .required("عنوان ضروری است"),
+    briefText: yup
+      .string()
+      .min(5, "حداقل ۱۰ کاراکتر را وارد کنید")
+      .required("توضیحات ضروری است"),
+    text: yup
+      .string()
+      .min(5, "حداقل ۱۰ کاراکتر را وارد کنید")
+      .required("توضیحات ضروری است"),
+    slug: yup.string().required("اسلاگ ضروری است"),
+    readingTime: yup
+      .number()
+      .positive()
+      .integer()
+      .required("زمان مطالعه ضروری است")
+      .typeError("یک عدد را وارد کنید"),
+    category: yup.string().required("دسته بندی ضروری است"),
+  })
+  .required();
 
 export default function CreatePostForm() {
   const { categories } = useCategories();
   const [coverImageUrl, setCoverImagUrl] = useState(null);
+  const { createPost, isCreating } = useCreatePost();
+  const router = useRouter();
 
   const {
     register,
@@ -31,8 +60,21 @@ export default function CreatePostForm() {
     resolver: yupResolver(schema),
   });
 
+  const onSubmit = (data) => {
+    // dar senariyohayi ke json ra be hamrah file mikham ersal konim bayad be soorate formdata anha ra ersal konim
+    const formData = new FormData();
+    for (const key in data) {
+      formData.append(key, data[key]);
+    }
+    createPost(formData, {
+      onSuccess: () => {
+        router.push("/profile/posts");
+      },
+    });
+  };
+
   return (
-    <form className="form">
+    <form className="form" onSubmit={handleSubmit(onSubmit)}>
       <RHFTextField
         label="عنوان"
         errors={errors}
@@ -84,8 +126,9 @@ export default function CreatePostForm() {
           return (
             <FileInput
               label="کاور پست"
-              name="my-coverImage"
+              name="coverImage"
               isRequired
+              errors={errors}
               {...rest}
               value={value?.fileName}
               onChange={(event) => {
@@ -119,6 +162,16 @@ export default function CreatePostForm() {
           </ButtonIcon>
         </div>
       )}
+
+      <div>
+        {isCreating ? (
+          <SpinnerMini />
+        ) : (
+          <Button variant="primary" type="submit" className="w-full">
+            تائید
+          </Button>
+        )}
+      </div>
     </form>
   );
 }
