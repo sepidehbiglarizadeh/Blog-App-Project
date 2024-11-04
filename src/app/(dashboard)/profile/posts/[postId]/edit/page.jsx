@@ -6,9 +6,6 @@ import CreatePostForm from "../../create/_/CreatePostForm";
 export default async function EditPage({ params: { postId } }) {
   const { post } = await getPostByIdApi(postId);
 
-  console.log(post);
-  
-
   if (!post) {
     notFound();
   }
@@ -28,7 +25,7 @@ export default async function EditPage({ params: { postId } }) {
           },
         ]}
       />
-      <CreatePostForm />
+      <CreatePostForm postToEdit={post} />
     </div>
   );
 }

@@ -10,12 +10,14 @@ import TextField from "@/ui/TextField";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import useCreatePost from "./useCreatePost";
 import SpinnerMini from "@/ui/SpinnerMini";
 import { useRouter } from "next/navigation";
+import useEditPost from "./useEditPost";
+import { imageUrlToFile } from "@/utils/fileFormatter";
 
 const schema = yup
   .object({
@@ -42,10 +44,37 @@ const schema = yup
   })
   .required();
 
-export default function CreatePostForm() {
+export default function CreatePostForm({ postToEdit = {} }) {
+  const { _id: editId } = postToEdit;
+  const isEditSession = Boolean(editId);
+  const {
+    title,
+    text,
+    slug,
+    briefText,
+    readingTime,
+    category,
+    coverImage,
+    coverImageUrl: prevCoverImageUrl,
+  } = postToEdit;
+
+  let editValues = {};
+  if (isEditSession) {
+    editValues = {
+      title,
+      text,
+      slug,
+      briefText,
+      readingTime,
+      category: category._id,
+      coverImage,
+    };
+  }
+
   const { categories } = useCategories();
-  const [coverImageUrl, setCoverImagUrl] = useState(null);
+  const [coverImageUrl, setCoverImagUrl] = useState(prevCoverImageUrl || null);
   const { createPost, isCreating } = useCreatePost();
+  const { EditPost, isEditing } = useEditPost();
   const router = useRouter();
 
   const {
@@ -58,7 +87,19 @@ export default function CreatePostForm() {
   } = useForm({
     mode: "onTouched",
     resolver: yupResolver(schema),
+    defaultValues: editValues,
   });
+
+  useEffect(() => {
+    if (prevCoverImageUrl) {
+      // convert prev link to file
+      async function fetchMyApi() {
+        const file = await imageUrlToFile(prevCoverImageUrl);
+        setValue("coverImage", file);
+      }
+      fetchMyApi();
+    }
+  }, [editId]);
 
   const onSubmit = (data) => {
     // dar senariyohayi ke json ra be hamrah file mikham ersal konim bayad be soorate formdata anha ra ersal konim
@@ -66,11 +107,24 @@ export default function CreatePostForm() {
     for (const key in data) {
       formData.append(key, data[key]);
     }
-    createPost(formData, {
-      onSuccess: () => {
-        router.push("/profile/posts");
-      },
-    });
+
+    if (isEditSession) {
+      EditPost(
+        { id: editId, data: formData },
+        {
+          onSuccess: () => {
+            reset();
+            router.push("/profile/posts");
+          },
+        }
+      );
+    } else {
+      createPost(formData, {
+        onSuccess: () => {
+          router.push("/profile/posts");
+        },
+      });
+    }
   };
 
   return (
